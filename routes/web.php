@@ -16,12 +16,18 @@ Route::get('/', function () {
 });
 
 // Route::get('about', 'AboutController@index');
-// Route::get('about', 'AboutController')->name('about');
-// Route::get('contact-us', 'ContactController@index')->name('contact');
+Route::get('about', 'AboutController')->name('about');
+Route::get('contact-us', 'ContactController@index')->name('contact');
 
-// // Route::get('admin', 'Admin\DashboardController@index');
+Route::get('admin', 'Admin\DashboardController@index');
 // Route::get('dashboard', ['uses' => 'Admin\DashboardController@index', 'as' => 'admin']);
 
 Route::get('blog', ['uses' => 'PostController@index', 'as' => 'blog']);
+
+Route::get('blog/create', ['uses' => 'PostController@create', 'as' => 'create']);
+
+Route::post('blog/create', ['uses' => 'PostController@store', 'as' => 'store']);
+
 Route::get('blog/{id}', 
 ['uses' => 'PostController@show', 'as' => 'show']);
+
