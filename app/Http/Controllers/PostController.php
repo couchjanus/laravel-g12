@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use DB;
 
+use Illuminate\Support\Facades\Date;
+
 class PostController extends Controller
 {
     /**
@@ -14,19 +16,19 @@ class PostController extends Controller
      */
     public function index()
     {
-        //     $posts = DB::select('select * from posts');
-        // $posts = DB::table('posts')->get();
-        $posts = DB::table('posts')->paginate(10);
+        // $posts = DB::select('select * from posts');
+        $posts = DB::table('posts')->get();
+        // $posts = DB::table('posts')->paginate(10);
         // $posts = DB::table('posts')->simplePaginate(10);
         
-        // dump($posts);
-        // foreach ($posts as $post) {
-        //     dump($post->title);
-        // }
-       
-        return view('blog.index', ['posts' => $posts, 'title'=>'Awesome Blog']);
+        dump($posts);
+        foreach ($posts as $post) {
+            dump($post->title);
+        }
+    
+        // return view('blog.index', ['posts' => $posts, 'title'=>'Awesome Blog']);
     }
-  
+
 
     public function show($id)
     {
@@ -52,7 +54,7 @@ class PostController extends Controller
     public function latestPost() 
     {
         $post = DB::table('posts')
-                ->latest()
+                ->latest('title')
                 ->first();
         return view('blog.show', ['post' => $post]);
     }
@@ -60,7 +62,7 @@ class PostController extends Controller
     public function oldestPost()
     {
         $post = DB::table('posts')
-            ->oldest()
+            ->oldest('created_at')
             ->first();
         return view('blog.show', ['post' => $post]);
     }
@@ -107,19 +109,19 @@ class PostController extends Controller
         // $posts = DB::table('posts')
         //     ->whereNull('updated_at')
         //     ->get();
- 
+
         // $posts = DB::table('posts')
         //     ->whereNotNull('updated_at')
         //     ->get();
- 
+
         // $posts = DB::table('posts')
         //     ->whereDate('created_at', '2018-05-17')
         //     ->get();
- 
+
         // $posts = DB::table('posts')
         //     ->whereMonth('created_at', '05')
         //     ->get();
- 
+
         // $posts = DB::table('posts')
         //     ->whereDay('created_at', '18')
         //     ->get();
@@ -127,7 +129,7 @@ class PostController extends Controller
         // $posts = DB::table('posts')
         //     ->whereYear('created_at', '2018')
         //     ->get();
- 
+
         // $posts = DB::table('posts')
         //     ->whereColumn('updated_at', '>', 'created_at')
         //     ->get();
@@ -137,7 +139,7 @@ class PostController extends Controller
 
     public function takeLatestPosts() {
         $posts = DB::table('posts')->orderBy('id', 'desc')->take(5)->get();
- 
+
         return view('blog.index', ['posts' => $posts]);
     }
 
@@ -166,9 +168,15 @@ class PostController extends Controller
         // DB::table('posts')
         //     ->insert(['content' => $request['content'], 'title'=>$request['title'], 'created_at' => \Carbon\Carbon::now(), 'updated_at' => \Carbon\Carbon::now()]);
             
+        // $id = DB::table('posts')
+        // ->insertGetId(['content' => $request['content'], 'title'=>$request['title'], 'created_at' => \Carbon\Carbon::now(), 'updated_at' => \Carbon\Carbon::now()]);
+        // dump($id);
+
         $id = DB::table('posts')
-        ->insertGetId(['content' => $request['content'], 'title'=>$request['title'], 'created_at' => \Carbon\Carbon::now(), 'updated_at' => \Carbon\Carbon::now()]);
+        ->insertGetId(['content' => $request['content'], 'title'=>$request['title'], 'created_at' => Date::now(), 'updated_at' => Date::now()]);
         dump($id);
+
+        
 
         // DB::table('posts')->insert(
         //     ['title' => 'The query builder also provides an insert method', 'content' => 'The query builder also provides an insert method for inserting records into the database table. The insert method accepts an array of column names and values']
@@ -217,5 +225,12 @@ class PostController extends Controller
         // If you wish to truncate the entire table, which will remove all rows and reset the auto-incrementing ID to zero, you may use the truncate method:
         // DB::table('posts')->truncate();
     }
+
+    public function detChunk()
+    {
+
+    
+    
+    }    
 
 }
