@@ -15,17 +15,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
-Route::get('test', function () {
-    $sampleArray = ['one', 'two', 'three'];
-    dump($sampleArray);
-    dump(url()->current());
-    dump(url()->full());
-    dump(url()->previous());
-
-    return 'Test Dump Server';
-});
-
 Route::get('test-dd', function () {
     $sampleArray = ['one', 'two', 'three'];
     Debugbar::info($sampleArray);
@@ -66,17 +55,6 @@ Route::get('test-dd', function () {
 
 Route::get('about', 'AboutController')->name('about');
 Route::get('contact-us', 'ContactController@index')->name('contact');
-
-Route::get('dashboard', 'Admin\DashboardController@index')->name('admin');
-
-Route::get('blog', ['uses' => 'PostController@index', 'as' => 'blog']);
-
-Route::get('blog/create', ['uses' => 'PostController@create', 'as' => 'create']);
-
-Route::post('blog/create', ['uses' => 'PostController@store', 'as' => 'store']);
-
-Route::get('blog/{id}', 
-['uses' => 'PostController@show', 'as' => 'show']);
 
 Route::get('categories', function () {
     // $categories = DB::table('categories')->pluck('name');
@@ -151,8 +129,6 @@ Route::get('sort-by', function () {
             ->get();
     dump($users);
 });
-            
-
 
 
 // use Carbon\Carbon;
@@ -208,4 +184,47 @@ Route::get('union', function () {
                 ->union($first)
                 ->get();
     dump($posts);
+});
+
+// Blog
+
+// Route::get('blog', ['uses' => 'PostController@index', 'as' => 'blog']);
+
+// Route::get('blog/{id}', 
+// ['uses' => 'PostController@show', 'as' => 'show']);
+
+// Route::resource(
+//     'blog', 'PostController', [
+//         'only' => [ 'index', 'show' ]
+//     ]
+// );
+
+Route::get('blog/popular', 'PostController@popular');
+
+Route::resource(
+    'blog', 'PostController', [
+        'except' => [
+            'create', 'store', 'update', 'destroy'
+        ]
+    ]
+);
+
+
+
+
+
+// admin
+Route::get('admin', 'Admin\DashboardController')->name('admin');
+
+Route::resource('posts', 'Admin\PostController');
+Route::resource('categories', 'Admin\CategoryController');
+
+Route::get('admin/status', 'Admin\PostController@getPostsByStatus')->name('posts.status');
+Route::get('admin/sort', 'Admin\PostController@sortPostsByDate')->name('posts.sort');
+
+
+Route::prefix('admin')->group(function () {
+    Route::get('', 'Admin\DashboardController');
+    Route::resource('posts', 'Admin\PostController');
+    Route::resource('categories', 'Admin\CategoryController');
 });

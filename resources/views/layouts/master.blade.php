@@ -35,7 +35,7 @@
         @yield('navigation')
         
         @yield('jumbotron')
-               
+            
         @yield('page')
         @yield('footer')    
     </div>
