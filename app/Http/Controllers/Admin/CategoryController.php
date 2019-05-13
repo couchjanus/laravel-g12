@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Category;
 
+use Validator;
+
 class CategoryController extends Controller
 {
     /**
@@ -15,11 +17,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        // return "Category controller";
-        // $categories = Category::all();
-
-        // $categories = Category::paginate(10);
-        $categories = Category::latest()->paginate(5);
+        $categories = Category::latest()->paginate(15);
         return view('admin.categories.index', compact('categories')); 
     }
 
@@ -41,18 +39,11 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        // Создание нового экземпляра
-        // $category = new Category;
-        // $category->name = $request->name;
-        // $category->description = $request->description;
-        // $category->save();
-        
-        // $category->fill(['name' => $request->name, 'description' => $request->description]);
-
-        // $category = App\Category::create(['name' =>$request->name, ‘description’ => $request->description]);
-
+        $this->validate($request, [
+            'name' => 'required|unique:categories|max:255',
+            'description' => 'nullable|string',
+        ]);
         Category::create($request->all());
-        
         return redirect(route('categories.index'));
     }
 
@@ -87,9 +78,24 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Category $category)
     {
-        $category = Category::find($id);
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|unique:categories|max:255|min:3',
+            'description' => 'nullable|string',
+        ]);
+        
+        // $validator = Validator::make($request->all(), [
+        //     'name' => 'required|unique:categories|max:255',
+        //     'description' => 'nullable|string',
+        // ])->validate();
+
+        if ($validator->fails()) {
+            return redirect('admin/categories/create')
+                        ->withErrors($validator)
+                        ->withInput();
+        }
+
         $category->update($request->all());
         return redirect()->route('categories.index');
     }

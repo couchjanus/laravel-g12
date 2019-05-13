@@ -3,7 +3,7 @@
 
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.8.14 on 2019-05-07 20:10:36.
+ * Generated for Laravel 5.8.14 on 2019-05-13 10:59:18.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -15124,6 +15124,50 @@ namespace Barryvdh\Debugbar {
  
 }
 
+namespace Waavi\Sanitizer\Laravel { 
+
+    /**
+     * 
+     *
+     * @see \Illuminate\Validation\Factory
+     */ 
+    class Facade {
+        
+        /**
+         * Create a new Sanitizer instance
+         * 
+         * @param  array   $data       Data to be sanitized
+         *
+         * @param array $rules Filters to be applied to the given data
+         *  @return Sanitizer
+         * @static 
+         */ 
+        public static function make($data, $rules)
+        {
+                        /** @var \Waavi\Sanitizer\Laravel\Factory $instance */
+                        return $instance->make($data, $rules);
+        }
+        
+        /**
+         * Add a custom filters to all Sanitizers created with this Factory.
+         * 
+         * @param  string  $name       Name of the filter
+         *
+         * @param mixed $extension Either the full class name of a Filter class implementing the Filter contract, or a \Closure.
+         *  @throws InvalidArgumentException
+         *  @return void
+         * @static 
+         */ 
+        public static function extend($name, $customFilter)
+        {
+                        /** @var \Waavi\Sanitizer\Laravel\Factory $instance */
+                        return $instance->extend($name, $customFilter);
+        }
+         
+    }
+ 
+}
+
 
 namespace  { 
 
@@ -17754,6 +17798,8 @@ namespace  {
     class View extends \Illuminate\Support\Facades\View {}
 
     class Debugbar extends \Barryvdh\Debugbar\Facade {}
+
+    class Sanitizer extends \Waavi\Sanitizer\Laravel\Facade {}
  
 }
 

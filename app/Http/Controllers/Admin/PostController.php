@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Enums\StatusType;
 use App\Category;
+use App\Http\Requests\PostStoreFormRequest;
+use App\Http\Requests\PostUpdateFormRequest;
 
 class PostController extends Controller
 {
@@ -17,24 +19,18 @@ class PostController extends Controller
      */
     public function index()
     {
-        // $posts = Post::all();
-        // dump($posts);
         $posts = Post::paginate();
         $status = StatusType::toSelectArray();
         $order = 'asc'; 
         return view('admin.posts.index', compact('posts', 'status', 'order'));
-        
     }
 
     public function getPostsByStatus(Request $request)
     {
-        // dump($request);
         static $statusPost;
         $status = StatusType::toSelectArray();
-        // $posts = Post::whereStatus($request->status)->paginate();
         $statusPost = $request->status; 
-        $posts = Post::status($statusPost)->paginate(5);
-        // dump($posts);
+        $posts = Post::status($statusPost)->paginate();
         return view('admin.posts.status', compact('posts', 'status', 'statusPost'));
     }
 
@@ -43,8 +39,6 @@ class PostController extends Controller
         $status = StatusType::toSelectArray();
         $order = isset($request->order)?$request->order:'desc'; 
         $posts = Post::orderBy('updated_at', $order)->paginate();
-        // dump($posts);
-    
         return view('admin.posts.index', compact('posts', 'status', 'order'));
     }
 
@@ -65,7 +59,6 @@ class PostController extends Controller
         $categories = Category::all(); 
         $status = StatusType::toSelectArray(); 
         return view('admin.posts.create')->withStatus($status)->withCategories($categories);
-
     }
 
     /**
@@ -74,10 +67,14 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PostStoreFormRequest $request)
     {
         // Получить post или создать, если не существует...
-        $post = Post::firstOrCreate(['title' => $request->title, 'content'=>$request->content, 'status'=>$request->status, 'category_id'=>$request->category_id, 'user_id'=>1]);
+        $post = Post::firstOrCreate([
+            'title' => $request->title, 
+            'content'=>$request->content, 
+            'status'=>$request->status, 'category_id'=>$request->category_id, 
+            'user_id'=>1]);
         return redirect(route('posts.index'));
     }
 
@@ -113,13 +110,15 @@ class PostController extends Controller
      * @param  \App\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Post $post)
+    public function update(PostUpdateFormRequest $request, Post $post)
     {
-        // $post->updated_at = '2019-01-01 10:00:00';
-        // $post->save(['timestamps' => false]);
-
         // Если подходящей модели нет, создать новую.
-        $post->updateOrCreate(['title' => $request->title, 'content'=>$request->content, 'status'=>$request->status, 'category_id'=>$request->category_id, 'user_id'=>1]);
+        $post->updateOrCreate([
+            'title' => $request->title, 
+            'content'=>$request->content, 
+            'status'=>$request->status, 'category_id'=>$request->category_id, 
+            'user_id'=>1
+            ]);
         return redirect(route('posts.index'));
     }
 
@@ -159,39 +158,5 @@ class PostController extends Controller
         dump(Post::findOrFail($id));
         dump(Post::where('status', '>', 2)->firstOrFail());
     }
-
-    public function testIds()
-    {
-        // $ids = [1, 2, 3];
-        // $result = $this->getByIds($ids);
-
-        // $result = Post::where('id', '>', 40)->take(10)->get();
-
-        // $result = Post::where([
-        //     ['id','>', 40],
-        //     ['status', '=', 1],
-        // ])->get();
-        
-        // $result = Post::where('category_id', 1)->get();
-        // это:
-        // $result = Post::whereCategoryId(3)->get();
-
-        // $result = Post::whereDate('created_at', date('Y-m-d'));
-        // $result = Post::whereDay('created_at', date('d'));
-        // $result = Post::whereMonth('created_at', date('m'));
-        // $result = Post::whereYear('created_at', date('2019'))->get();
-
-        // $result = Post::where('id', 1);
-        // $result = Post::orWhere('id', 2);
-        // $result = Post::orWhere('id', 3);
-
-        // Вы можете сделать это так:
-        
-        // $result = Post::where('id', 1)->orWhere(['id' => 2, 'id' => 3])->get();
-
-
-        dump($result);
-    }
-
 
 }

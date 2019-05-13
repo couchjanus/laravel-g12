@@ -19,14 +19,23 @@
 </div>
 
 <div class="table-responsive">
-    @if (Session::get('errors') != Null)
+  @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+  @endif
+    {{--  @if (Session::get('errors') != Null)
       <div class="alert alert-warning alert-dismissible fade show" role="alert">
           <button type="button" class="close" data-dismiss="alert" aria-label="Close">
               <span aria-hidden="true">&times;</span>
           </button>
           {{  $errors->first() }}
       </div>
-    @endif
+    @endif  --}}
   <form action="{{ route('categories.update',['id' => $category->id]) }}" method="post">
     @method('put')
     @csrf
@@ -34,7 +43,10 @@
       <div class="card-block">
         <div class="form-group">
           <label for="title">Name</label>
-            <input name="name" class="form-control" type="text" value="{{ $category->name }}" required>
+            <input name="name" class="form-control @error('name') is-invalid @enderror" type="text" value="{{ $category->name }}" required>
+            @error('name')
+              <div class="alert alert-danger">{{ $message }}</div>
+            @enderror
         </div>
         <div class="form-group">
             <label for="description">Description</label>

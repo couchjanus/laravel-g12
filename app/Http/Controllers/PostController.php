@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use DB;
-
+use App\Post;
 use Illuminate\Support\Facades\Date;
+use App\Enums\StatusType;
+
 
 class PostController extends Controller
 {
@@ -14,16 +16,25 @@ class PostController extends Controller
      *
      * @return Response
      */
-    public function index()
-    {
-        $posts = DB::table('posts')->paginate(10);
-        // $posts = DB::table('posts')->simplePaginate(10);
+
+    public function index()    {
+        $posts = DB::table('posts')
+            ->where('status', StatusType::Published)
+            ->orderBy('updated_at', 'desc')
+            ->simplePaginate(5);
         return view('blog.index', ['posts' => $posts, 'title'=>'Awesome Blog']);
     }
 
-    public function show($id)
+    public function show($slug)
     {
-        $post = DB::table('posts')->where('id', $id)->first();
+        if (is_numeric($slug)) {
+            // Get post for slug.
+            $post = Post::findOrFail($slug);
+            return Redirect::to(route('blog.show', $post->slug), 301);
+            // 301 редирект со старой страницы, на новую.   
+        }
+        $post = DB::table('posts')->where('slug', $slug)->first();
+        // $post = Post::whereSlug($slug)->firstOrFail();
         return view('blog.show', ['post' => $post, 'hescomment'=>true]);
     }
 

@@ -7,26 +7,33 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use App\Enums\StatusType;
 use App\Scopes\TitleScope;
-
+use Cviebrock\EloquentSluggable\Sluggable;
 
 class Post extends Model
 {
-    // Таблица, связанная с моделью. 
-    protected $table = 'posts';
+    use Sluggable;
 
-        // protected $primaryKey = 'uuid'; // Если у вас нету поля 'id'
-        // public $incrementing = false; // Указывает что primary key не имеет свойства auto increment
-    
-        // переопределяем кол-во результатов на странице при пагинации (по-умолчанию: 15)
-        protected $perPage = 25; 
-    
-        protected $dates = ['created_at', 'deleted_at']; // which fields will be Carbon-ized
-    
-        protected $fillable = [
-            'title', 'content', 'status', 'category_id', 'user_id', 'visited'
+    /**
+     * Return the sluggable configuration array for this model.
+     *
+     * @return array
+     */
+    public function sluggable()
+    {
+        return [
+            'slug' => [
+                'source' => 'title'
+            ]
         ];
+    }
+
+    protected $perPage = 25; 
     
-        public $timestamps = true;
+    protected $dates = ['created_at', 'deleted_at']; // which fields will be Carbon-ized
+    
+    protected $fillable = [
+            'title', 'content', 'status', 'category_id', 'user_id', 'visited'
+    ];
     
         /**
          * Scope a query to only include posts of a given type.
@@ -54,5 +61,4 @@ class Post extends Model
             parent::boot();
             static::addGlobalScope(new TitleScope);
         }
-
 }
