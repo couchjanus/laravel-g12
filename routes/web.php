@@ -32,4 +32,25 @@ Route::prefix('admin')->group(function () {
     Route::resource('posts', 'Admin\PostController');
     Route::resource('categories', 'Admin\CategoryController');
     Route::resource('users', 'Admin\UserController');
+    Route::get('trashed', 'Admin\UserController@trashed')->name('users.trashed');
+    Route::delete('user-destroy/{id}', 'Admin\UserController@userDestroy')->name('user.force.destroy');
+    Route::post('restore/{id}', 'Admin\UserController@restore')->name('users.restore');
 });
+
+Route::get('/login/admin', 'Auth\LoginController@showAdminLoginForm');
+Route::get('/login/writer', 'Auth\LoginController@showWriterLoginForm');
+Route::get('/register/admin', 'Auth\RegisterController@showAdminRegisterForm');
+Route::get('/register/writer', 'Auth\RegisterController@showWriterRegisterForm');
+
+Route::post('/login/admin', 'Auth\LoginController@adminLogin');
+Route::post('/login/writer', 'Auth\LoginController@writerLogin');
+Route::post('/register/admin', 'Auth\RegisterController@createAdmin');
+Route::post('/register/writer', 'Auth\RegisterController@createWriter');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('/session', 'HomeController@showRequest')->name('session');
+
+Route::view('/writer', 'staff.writer')->middleware('auth');

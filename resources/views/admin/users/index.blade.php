@@ -8,7 +8,8 @@
           <a href="{{ route('users.create') }}" title="Add New Users">
               <button class="btn btn-sm btn-outline-success"><span data-feather="plus"></span> Add New</button>
           </a>
-          <button class="btn btn-sm btn-outline-secondary"><span data-feather="trash"></span> Trashed List</button>
+          <a href="{{ route('users.trashed') }}" title="Trashed Users"><button class="btn btn-sm btn-outline-secondary"><span data-feather="trash"></span> Trashed List</button>
+          </a>
         </div>
       </div>
   </div>
