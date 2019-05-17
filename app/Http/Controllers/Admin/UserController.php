@@ -9,7 +9,7 @@ use App\Http\Controllers\Controller;
 use Hash;
 
 use App\Http\Requests\UserStoreFormRequest;
-
+use App\Profile;
 
 class UserController extends Controller
 {
@@ -49,6 +49,10 @@ class UserController extends Controller
             'email' => $request['email'],
             'password' => Hash::make($request['password']),
         ]);
+
+        $profile = new Profile();
+        $user->profile()->save($profile);
+
         return redirect()->route('users.index')->with('success','User created successfully');
     }
 

@@ -44,10 +44,8 @@ class PostController extends Controller
 
 
     public function getById($id)       {
-        // Получение модели по её первичному ключу...
         return  \App\Post::find($id);
     }
-    
 
     /**
      * Show the form for creating a new resource.
@@ -58,7 +56,8 @@ class PostController extends Controller
     {
         $categories = Category::all(); 
         $status = StatusType::toSelectArray(); 
-        return view('admin.posts.create')->withStatus($status)->withCategories($categories);
+        $tags = \App\Tag::all();//get()->pluck('name', 'id');
+        return view('admin.posts.create')->withStatus($status)->withCategories($categories)->withTags($tags);
     }
 
     /**
@@ -75,6 +74,7 @@ class PostController extends Controller
             'content'=>$request->content, 
             'status'=>$request->status, 'category_id'=>$request->category_id, 
             'user_id'=>1]);
+        $post->tags()->sync((array)$request->input('tag'));    
         return redirect(route('posts.index'));
     }
 
@@ -99,8 +99,9 @@ class PostController extends Controller
     public function edit(Post $post)
     {
         $categories = Category::pluck('name', 'id'); 
-        $status = StatusType::toSelectArray(); 
-        return view('admin.posts.edit')->withPost($post)->withStatus($status)->withCategories($categories);
+        $status = StatusType::toSelectArray();
+        $tags = \App\Tag::get()->pluck('name', 'id');
+        return view('admin.posts.edit')->withPost($post)->withStatus($status)->withCategories($categories)->withTags($tags);
     }
 
     /**
@@ -119,6 +120,7 @@ class PostController extends Controller
             'status'=>$request->status, 'category_id'=>$request->category_id, 
             'user_id'=>1
             ]);
+        $post->tags()->sync((array)$request->input('tag'));
         return redirect(route('posts.index'));
     }
 
@@ -130,7 +132,9 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        $post->tags()->detach();
+        $post->delete();
+        return redirect()->route('posts.index')->with('type','success')->with('message','Post deleted successfully');
     }
 
     public function getByIds($ids)

@@ -61,4 +61,14 @@ class User extends Authenticatable
         if ($input)
             $this->attributes['password'] = app('hash')->needsRehash($input) ? Hash::make($input) : $input;
     }
+
+    public function posts()
+    {
+        return $this->hasMany('App\Post');
+    }
+
+    public function profile()
+    {
+        return $this->hasOne('App\Profile');
+    }
 }
