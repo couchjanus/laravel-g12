@@ -115,4 +115,8 @@ class RegisterController extends Controller
         
         return redirect()->intended('login/writer');
     }
+
+    public function requestInvitation() {
+        return view('auth.request');
+    }
 }
