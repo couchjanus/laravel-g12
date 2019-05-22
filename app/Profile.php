@@ -11,6 +11,8 @@ class Profile extends Model
         'last_name',
         'location',
         'bio',
+        'username',
+        'avatar'
     ];
 
     public function user()
