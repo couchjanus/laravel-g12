@@ -36,28 +36,40 @@ Route::prefix('blog')->group(function () {
 
 // admin
 
-Route::prefix('admin')->group(function () {
-    Route::get('', 'Admin\DashboardController');
-    Route::get('status', 'Admin\PostController@getPostsByStatus')->name('posts.status');
-    Route::get('sort', 'Admin\PostController@sortPostsByDate')->name('posts.sort');
-    Route::resource('posts', 'Admin\PostController');
-    Route::resource('tags', 'Admin\TagController');
-    Route::resource('categories', 'Admin\CategoryController');
-    Route::resource('users', 'Admin\UserController');
-    Route::get('trashed', 'Admin\UserController@trashed')->name('users.trashed');
-    Route::delete('user-destroy/{id}', 'Admin\UserController@userDestroy')->name('user.force.destroy');
-    Route::post('restore/{id}', 'Admin\UserController@restore')->name('users.restore');
-    Route::get('invitations', 'Admin\InvitationsController@index')->name('showInvitations');
+Route::middleware('web')->group(function () {
+    Route::middleware('auth:admin')->prefix('admin')->group(function () {
+        Route::get('', 'Admin\DashboardController');
+        Route::get('status', 'Admin\PostController@getPostsByStatus')->name('posts.status');
+        Route::get('sort', 'Admin\PostController@sortPostsByDate')->name('posts.sort');
+        Route::resource('posts', 'Admin\PostController');
+        Route::resource('tags', 'Admin\TagController');
+        Route::resource('categories', 'Admin\CategoryController');
+        Route::resource('users', 'Admin\UserController');
+        Route::resource('admins', 'Admin\AdminsController');
+        Route::resource('writers', 'Admin\WritersController');
 
-    Route::post('invite/{id}', 'Admin\InvitationsController@sendInvite')
-    ->name('send.invite');
+        Route::get('trashed', 'Admin\UserController@trashed')->name('users.trashed');
+        Route::get('trashed-admins', 'Admin\AdminsController@trashed')->name('admins.trashed');
+        Route::get('trashed-writers', 'Admin\WritersController@trashed')->name('writers.trashed');
+        Route::delete('user-destroy/{id}', 'Admin\UserController@userDestroy')->name('user.force.destroy');
+        
+        Route::delete('admin-destroy/{id}', 'Admin\AdminsController@userDestroy')->name('admin.force.destroy');
+        Route::delete('writer-destroy/{id}', 'Admin\WritersController@userDestroy')->name('writer.force.destroy');
 
-    Route::get('feedbacks', 'Admin\FeedbackController@index')->name('feedbacks.index');
-    Route::get('feedbacks/delete/{id}', 'Admin\FeedbackController@destroy');
-    
+        Route::post('restore/{id}', 'Admin\UserController@restore')->name('users.restore');
+        Route::post('restore-admin/{id}', 'Admin\AdminsController@restore')->name('admins.restore');
+        Route::post('restore-writer/{id}', 'Admin\WritersController@restore')->name('writers.restore');
+        
+        Route::get('invitations', 'Admin\InvitationsController@index')->name('showInvitations');
+        Route::post('invite/{id}', 'Admin\InvitationsController@sendInvite')
+        ->name('send.invite');
+        Route::get('feedbacks', 'Admin\FeedbackController@index')->name('feedbacks.index');
+        Route::get('feedbacks/delete/{id}', 'Admin\FeedbackController@destroy');
+        
+    });
 });
 
-Route::get('/login/admin', 'Auth\LoginController@showAdminLoginForm');
+Route::get('/login/admin', 'Auth\LoginController@showAdminLoginForm')->name('login.admin');
 Route::get('/login/writer', 'Auth\LoginController@showWriterLoginForm');
 Route::get('/register/admin', 'Auth\RegisterController@showAdminRegisterForm');
 Route::get('/register/writer', 'Auth\RegisterController@showWriterRegisterForm');

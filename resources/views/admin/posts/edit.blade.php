@@ -30,9 +30,9 @@
             </div>
         @endif
 
-        <form action="{{ route('posts.update',['id' => $post->id]) }}" method="post">
+        <form action="{{ route('posts.update',$post->id) }}" method="post">
             @csrf
-            @method("PUT")
+            @method("PATCH")
             <div class="card">
                 <div class="card-block">
                     <div class="form-group">

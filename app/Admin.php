@@ -15,7 +15,7 @@ class Admin extends Authenticatable
     protected $guard = 'admin';
 
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'is_super'
     ];
 
     protected $hidden = [
@@ -24,4 +24,26 @@ class Admin extends Authenticatable
     protected $dates = [
         'deleted_at',
     ];
+
+    public static function scopeTrash($query, $id)
+    {
+        return $query->withTrashed()->where('id', $id)->first();       
+    }
+
+    public function setPasswordAttribute($input)
+    {
+        if ($input)
+            $this->attributes['password'] = app('hash')->needsRehash($input) ? Hash::make($input) : $input;
+    }
+
+    public function posts()
+    {
+        return $this->hasMany('App\Post');
+    }
+
+    public function isSuperAdmin()
+    {
+        return $this->is_super;
+    }
+
 }

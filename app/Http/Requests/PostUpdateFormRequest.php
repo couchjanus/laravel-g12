@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Gate;
 
 class PostUpdateFormRequest extends FormRequest
 {
@@ -13,7 +14,9 @@ class PostUpdateFormRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        // return true;
+        $post = $this->route('post');
+        return Gate::allows('update-post', $post);
     }
 
     /**

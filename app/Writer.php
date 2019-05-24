@@ -24,4 +24,15 @@ class Writer extends Authenticatable
     protected $dates = [
         'deleted_at',
     ];
+
+    public static function scopeTrash($query, $id)
+    {
+        return $query->withTrashed()->where('id', $id)->first();       
+    }
+
+    public function setPasswordAttribute($input)
+    {
+        if ($input)
+            $this->attributes['password'] = app('hash')->needsRehash($input) ? Hash::make($input) : $input;
+    }
 }
