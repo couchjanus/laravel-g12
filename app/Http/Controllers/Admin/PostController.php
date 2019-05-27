@@ -160,11 +160,11 @@ class PostController extends Controller
         // dd($request);
         
         $post->update([
-                'title' => $request->title, 
-                'content'=>$request->content, 
-                'status'=>$request->status, 'category_id'=>$request->category_id, 
-                'user_id'=>Auth::id()
-                ]);
+            'title' => $request->title, 
+            'content'=>$request->content, 
+            'status'=>$request->status, 'category_id'=>$request->category_id, 
+            'user_id'=>Auth::id()
+        ]);
         $post->tags()->sync((array)$request->input('tag'));
         return redirect(route('posts.index'))->with('success','Post updated successfully');
         
