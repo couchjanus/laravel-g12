@@ -55,6 +55,21 @@
                         <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
                 </div>
+
+                <div class="form-group">
+                    <label for="selectall-role" class= 'control-label'>Select roles</label>
+                    <button type="button" class="btn btn-primary btn-xs" id="selectbtn-role">
+                        Select all
+                    </button>
+                    <button type="button" class="btn btn-primary btn-xs" id="deselectbtn-role">
+                        Deselect all
+                    </button>
+                    <select name="role[]" class="form-control select2" multiple='multiple' id='selectall-role'>
+                        @foreach($roles as $role)
+                            <option value="{{$role->id}}">{{ $role->name}}</option>
+                        @endforeach
+                    </select>
+                </div>
     
             </div>
 
@@ -67,4 +82,21 @@
     </form>
 
   </div>
+@endsection
+@section('scripts')
+    @parent
+    <script>
+        $("#selectbtn-role").click(function(){
+            $("#selectall-role > option").prop("selected","selected");
+            $("#selectall-role").trigger("change");
+        });
+        $("#deselectbtn-role").click(function(){
+            $("#selectall-role > option").prop("selected","");
+            $("#selectall-role").trigger("change");
+        });
+
+        $(document).ready(function () {
+            $('.select2').select2();
+        });
+    </script>
 @endsection

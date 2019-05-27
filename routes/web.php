@@ -18,7 +18,7 @@ Route::get('/', function () {
 Route::get('about', 'AboutController')->name('about');
 Route::get('contact-us', 'ContactController@index')->name('contact');
 
-
+Route::get('test', 'GadgetTestController@index');
 
 // Blog
 Route::get('/get-by-category', function () {
@@ -47,6 +47,9 @@ Route::middleware('web')->group(function () {
         Route::resource('users', 'Admin\UserController');
         Route::resource('admins', 'Admin\AdminsController');
         Route::resource('writers', 'Admin\WritersController');
+
+        Route::resource('permissions', 'Admin\PermissionController');
+        Route::resource('roles', 'Admin\RoleController');
 
         Route::get('trashed', 'Admin\UserController@trashed')->name('users.trashed');
         Route::get('trashed-admins', 'Admin\AdminsController@trashed')->name('admins.trashed');

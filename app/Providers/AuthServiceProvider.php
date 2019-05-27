@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 use App\Admin;
+use App\Permission;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -59,5 +60,23 @@ class AuthServiceProvider extends ServiceProvider
                 return true;
             }
         });
+
+        $this->getPermissions()->each(function (Permission $permission) {
+            $ability = $permission->slug;
+            $policy  = function ($user) use ($permission) {
+                return $user->hasRole($permission->roles);
+            };
+
+            Gate::define($ability, $policy);
+        });
+
+        Gate::before(function ($user, $ability) {
+            return $user->hasRole('Super Admin') ? true : null;
+        });
+    }
+
+    private function getPermissions()
+    {
+        return Permission::with('roles')->get();
     }
 }

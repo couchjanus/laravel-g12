@@ -1,7 +1,7 @@
 <h2 class="post-title">{{$post->title}} </h2>
 <!-- Date/Time -->
 <p>Posted on {{ date('d F Y', strtotime($post->created_at)) }} by
-    <a href="#">{{$post->user->name}} </a></p>
+    {{-- <a href="#">{{$post->user->name}} </a></p> --}}
 <hr>
 
 <!-- Post Content -->

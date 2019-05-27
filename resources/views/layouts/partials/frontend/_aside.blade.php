@@ -10,6 +10,11 @@
         </div>
 
         <div class="p-3">
+            @gadget('categories')
+        </div>
+        
+
+        <div class="p-3">
             <h4 class="font-italic">Elsewhere</h4>
             <ol class="list-unstyled">
             <li><a href="#">GitHub</a></li>
