@@ -7,12 +7,8 @@ use Illuminate\Http\Request;
 class TestController extends Controller
 {
     //
-    public static function index()
+    public function formSubmit(Request $request)
     {
-        return 'I am Test Controller';
-    }
-    public static function add($num1, $num2)
-    {
-        return $num1 + $num2;
+    	return response()->json([$request->all()]);
     }
 }

@@ -7,11 +7,15 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-// class User extends Authenticatable implements MustVerifyEmail
-class User extends Authenticatable
+use Hash;
+
+use App\Traits\HasRoles;
+
+class User extends Authenticatable implements MustVerifyEmail
 {
     use Notifiable;
     use SoftDeletes;
+    use HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -31,15 +35,15 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+    public function isOnline()
+    {
+        return \Cache::has('user-is-online-' . $this->id);
+    }
 
+    /**
+     * Атрибуты, которые должны быть преобразованы в даты.
+    * @var array
+     */
     protected $dates = [
         'deleted_at',
     ];
@@ -63,11 +67,6 @@ class User extends Authenticatable
             $this->attributes['password'] = app('hash')->needsRehash($input) ? Hash::make($input) : $input;
     }
 
-    public function posts()
-    {
-        return $this->hasMany('App\Post');
-    }
-
     public function profile()
     {
         return $this->hasOne('App\Profile');
@@ -75,7 +74,18 @@ class User extends Authenticatable
 
     public function social()
     {
-        return $this->hasMany(Social::class);
+        return $this->hasMany('App\Social');
     }
 
+    /**
+     * Checks a Permission
+     */
+    public function isSuperVisor()
+    {
+        if ($this->roles->contains('slug', 'super-visor')) {
+            return true;
+        }
+        return false;
+    }
+    
 }

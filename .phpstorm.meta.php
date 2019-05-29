@@ -5,7 +5,7 @@ namespace PHPSTORM_META {
 
    /**
     * PhpStorm Meta file, to provide autocomplete information for PhpStorm
-    * Generated on 2019-05-22 08:47:09.
+    * Generated on 2019-05-29 05:20:05.
     *
     * @author Barry vd. Heuvel <barryvdh@gmail.com>
     * @see https://github.com/barryvdh/laravel-ide-helper
@@ -127,6 +127,7 @@ namespace PHPSTORM_META {
         'files' => \Illuminate\Filesystem\Filesystem::class,
         'filesystem' => \Illuminate\Filesystem\FilesystemManager::class,
         'filesystem.disk' => \Illuminate\Filesystem\FilesystemAdapter::class,
+        'gadget' => \App\Gadgets\Gadget::class,
         'hash' => \Illuminate\Hashing\HashManager::class,
         'hash.driver' => \Illuminate\Hashing\BcryptHasher::class,
         'log' => \Illuminate\Log\LogManager::class,
@@ -273,6 +274,7 @@ namespace PHPSTORM_META {
         'files' => \Illuminate\Filesystem\Filesystem::class,
         'filesystem' => \Illuminate\Filesystem\FilesystemManager::class,
         'filesystem.disk' => \Illuminate\Filesystem\FilesystemAdapter::class,
+        'gadget' => \App\Gadgets\Gadget::class,
         'hash' => \Illuminate\Hashing\HashManager::class,
         'hash.driver' => \Illuminate\Hashing\BcryptHasher::class,
         'log' => \Illuminate\Log\LogManager::class,
@@ -419,6 +421,7 @@ namespace PHPSTORM_META {
         'files' => \Illuminate\Filesystem\Filesystem::class,
         'filesystem' => \Illuminate\Filesystem\FilesystemManager::class,
         'filesystem.disk' => \Illuminate\Filesystem\FilesystemAdapter::class,
+        'gadget' => \App\Gadgets\Gadget::class,
         'hash' => \Illuminate\Hashing\HashManager::class,
         'hash.driver' => \Illuminate\Hashing\BcryptHasher::class,
         'log' => \Illuminate\Log\LogManager::class,
@@ -565,6 +568,7 @@ namespace PHPSTORM_META {
         'files' => \Illuminate\Filesystem\Filesystem::class,
         'filesystem' => \Illuminate\Filesystem\FilesystemManager::class,
         'filesystem.disk' => \Illuminate\Filesystem\FilesystemAdapter::class,
+        'gadget' => \App\Gadgets\Gadget::class,
         'hash' => \Illuminate\Hashing\HashManager::class,
         'hash.driver' => \Illuminate\Hashing\BcryptHasher::class,
         'log' => \Illuminate\Log\LogManager::class,
@@ -711,6 +715,7 @@ namespace PHPSTORM_META {
         'files' => \Illuminate\Filesystem\Filesystem::class,
         'filesystem' => \Illuminate\Filesystem\FilesystemManager::class,
         'filesystem.disk' => \Illuminate\Filesystem\FilesystemAdapter::class,
+        'gadget' => \App\Gadgets\Gadget::class,
         'hash' => \Illuminate\Hashing\HashManager::class,
         'hash.driver' => \Illuminate\Hashing\BcryptHasher::class,
         'log' => \Illuminate\Log\LogManager::class,
@@ -857,6 +862,7 @@ namespace PHPSTORM_META {
         'files' => \Illuminate\Filesystem\Filesystem::class,
         'filesystem' => \Illuminate\Filesystem\FilesystemManager::class,
         'filesystem.disk' => \Illuminate\Filesystem\FilesystemAdapter::class,
+        'gadget' => \App\Gadgets\Gadget::class,
         'hash' => \Illuminate\Hashing\HashManager::class,
         'hash.driver' => \Illuminate\Hashing\BcryptHasher::class,
         'log' => \Illuminate\Log\LogManager::class,
@@ -1003,6 +1009,7 @@ namespace PHPSTORM_META {
         'files' => \Illuminate\Filesystem\Filesystem::class,
         'filesystem' => \Illuminate\Filesystem\FilesystemManager::class,
         'filesystem.disk' => \Illuminate\Filesystem\FilesystemAdapter::class,
+        'gadget' => \App\Gadgets\Gadget::class,
         'hash' => \Illuminate\Hashing\HashManager::class,
         'hash.driver' => \Illuminate\Hashing\BcryptHasher::class,
         'log' => \Illuminate\Log\LogManager::class,

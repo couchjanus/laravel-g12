@@ -19,15 +19,16 @@ class PostController extends Controller
 
     public function index()   
     {
-        $posts = Post::where([
+        $posts = Post::withCount('comments')
+            ->where([
             'status' => StatusType::Published, 
             ])
             ->with('category')
             ->orderBy('updated_at', 'desc')
-            ->paginate(5);
+            ->simplePaginate(5);
         return view('blog.index')->with(compact('posts'))->withTitle('Awesome Blog');
     }
-
+    
     public function show($slug)
     {
         if (is_numeric($slug)) {
@@ -37,7 +38,8 @@ class PostController extends Controller
         
         $post = Post::whereSlug($slug)->firstOrFail();
         $post->update(['visited'=>$post->visited+1]);
-        return view('blog.show', ['post' => $post, 'hescomment'=>true]);
+        $hescomment = $post::has('comments')?true:false;
+        return view('blog.show')->withPost($post)->withHescomment($hescomment);
     }
 
     public function getPostsByCategory($categoryId)   {
