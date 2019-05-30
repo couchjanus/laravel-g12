@@ -9,16 +9,13 @@ class CategoriesGadget implements GadgetContract
 {
     public function execute()
     {
-        $data = Category::all();
-        return $data;
-    }
+        // $cats = \App\Post::where('status',2)->get('category_id');
 
-    // public function execute()
-    // {
-    //     $data = Category::all();
-    //     return view('gadgets::categories', [
-    //         'data' => $data
-    //         ]
-    //     );
-    // }
+        $categories = \App\Category::find(\App\Post::where('status',2)->get('category_id'));
+        
+        return view('gadgets::categories', [
+            'data' => $categories
+            ]
+        );
+    }
 }

@@ -13,6 +13,12 @@
             @gadget('categories')
         </div>
         
+        <div class="p-3">
+            <contact-form></contact-form>
+        </div>
+
+        
+        
 
         <div class="p-3">
             <h4 class="font-italic">Elsewhere</h4>

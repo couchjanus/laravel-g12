@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -28,34 +29,15 @@ Route::group(
             }
         );
 
-        // Route::post(
-        //     'post/{id}/comment',
-        //     function ($id, Request $request) {
-        //         // $user = \Auth::user();
-        //         // \App\Post::findOrFail($id)->comment($request->all(), $user);
-        //         return response()->json([$request->all()]);
-                
-        //     }
-        // );
-
-        // Route::post(
-        //     'comment',
-        //     function (Request $request) {
-        //         $user = \Auth::user();
-        //         \App\Post::findOrFail($request->post_id)->comment($request->all(), $user);
-        //         return response()->json([$request->all()]);
-                
-        //     }
-        // );
-
         Route::post(
-            'post/{id}/comment',
-            function ($id, Request $request) {
-                $user = \Auth::user();
-                return \App\Post::findOrFail($id)->comment($request->all(), $user);
+            '/comment',
+            function (Request $request) {
+                $user = \App\User::find($request->user_id);
+                $post = \App\Post::find($request->post_id);
+                $post->comment($request->comment, $user);
+                return response()->json($post, 200);
             }
         );
-        // Route::post('comment', 'TestController@formSubmit');
 
         // Route::patch(
         //     'post/{id}/comment/{comment_id}',

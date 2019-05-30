@@ -34,9 +34,10 @@ trait HasComments
     public function comment($data, Model $creator, Model $parent = null): Comment
     {
         $commentableModel = $this->commentableModel();
-
+        // dump($commentableModel);
+        // dump($data);
         $comment = (new $commentableModel())->createComment($this, $data, $creator);
-
+        // dump($data);
         if (!empty($parent)) {
             $parent->appendNode($comment);
         }

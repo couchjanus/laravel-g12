@@ -6,7 +6,9 @@
                     Laravel
                 </div>
 
-                <example-component :current-user='{!! Auth::user() !!}'></example-component>
+                {{-- <example-component></example-component> --}}
+                <contact-form></contact-form>
+
             </div>
         </div>
     

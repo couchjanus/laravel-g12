@@ -7,6 +7,13 @@ use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
+    protected $user;
+    
+    public function __construct()
+    {
+        $this->user = \Auth::user() // null
+    }
+    
     /**
      * Display a listing of the resource.
      *
@@ -35,7 +42,10 @@ class CommentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->user = \Auth::user() // возвращается модель User
+        dump('Auth User ',  $user);
+        
+        return \App\Post::findOrFail($request->post_id)->comment($request->all(), $user);
     }
 
     /**

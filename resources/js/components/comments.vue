@@ -22,14 +22,12 @@
     <!-- Single Comment -->
     <h4>Comments</h4>
     <ul class="list-group list-group-flush">
-      <li class="list-group-item" v-for="comment in comments">
+      <li class="list-group-item" v-for="comment in comments" v-bind:key="comment.id">
         <h3>{{comment.creator.name}} </h3>  <time>{{comment.created_at}}</time>
         <div class="media-body">{{comment.body}}</div>
       </li>
     </ul>
-    <ul v-if="errors && errors.length">
-      <li v-for="error of errors">{{error.message}}</li>
-    </ul>
+    
   </div>
 </template>
 
@@ -55,55 +53,46 @@ export default {
         .get("/api/post/" + this.currentId + "/comments")
         .then(response => {
           this.comments = response.data;
-          // sconsole.log(this.comments);
         })
         .catch(error => {
           this.errors.push(error);
         });
     },
-
-    createComment: function(){
-      this.$http.post("/api/post/"+this.currentId+"/comment", this.comment)
-        .then( (response) => {
-          this.comment.body= '';
-          this.fetchComments();
-      }).catch( error => {
-         this.comment.body = '';
-         this.fetchComments();
-        });
-    },
-
   
-    // createComment: function() {
-    //   axios({ 
-    //     method: "POST", 
-    //     url: '/api/comment',
-    //     param: {
-    //         body: this.comment.body,
-    //         post_id: this.currentId
-    //     },
-    //     headers: {
-    //       "content-type": "application/x-www-form-urlencoded" ,
-    //     } 
-    //   })
-        // axios.post(
-        //   '/api/comment',
-        //   {
-        //     body: this.comment.body,
-        //     post_id: this.currentId
-        //   }
-        // )
-        // .then(response => {
-        //   console.log(response);
-        //   this.comment.body = "";
-        //   this.fetchComments();
-        // })
-        // .catch(error => {
-        //   console.log(error);
-        //   this.comment.body = "";
-        //   this.fetchComments();
-        // });
-    // }
+    createComment: function() {
+
+      const axiosConfig = {
+          headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+              'Access-Control-Allow-Origin': '*',
+          }
+      };
+      
+      const resData = { 
+          comment: this.comment,
+          post_id: this.currentId,
+          user_id: this.currentUser
+      };
+      axios.post('/api/comment', resData, axiosConfig)
+      .then(response => {
+            if(response.status == 200){
+                console.log("All successfull");
+                this.comment.body = "";
+                this.fetchComments();
+            } else {
+                console.log(response.status);
+                this.comment.body = "";
+                this.fetchComments();
+            }
+        })
+      .catch(error => {
+          // this.errors.push(error);
+          console.log(error);
+          this.comment.body = "";
+          this.fetchComments();
+      });
+    }
   }
 };
 </script>

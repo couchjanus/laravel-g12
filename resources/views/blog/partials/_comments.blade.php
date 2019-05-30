@@ -7,7 +7,6 @@
     <comments :current-id='{!! $post->id !!}'></comments>
 @endif  
 
-
 {{-- @foreach ($post->comments as $comment)
        <strong>{{ $comment->creator->name }}</strong>
        <p>{{ $comment->body }}</p>

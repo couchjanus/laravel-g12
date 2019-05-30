@@ -20,7 +20,9 @@ Route::get('contact-us', 'ContactController@index')->name('contact');
 
 // Route::get('test', 'GadgetTestController@index');
 // Route::post('formSubmit','TestController@formSubmit');
-Route::post('formSubmit','TestController@formSubmit');
+
+Route::post('/submit', 'TestController@submit');
+
 // Blog
 Route::get('/get-by-category', function () {
     $posts = App\Post::where('status', 2)

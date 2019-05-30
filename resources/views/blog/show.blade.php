@@ -14,5 +14,7 @@
     <div class="blog-main">
       @includeIf('blog.partials._single-post', ['post' => $post])
      
+    
+    
     </div>
 @endsection

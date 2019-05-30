@@ -6,9 +6,16 @@ use Illuminate\Http\Request;
 
 class TestController extends Controller
 {
-    //
-    public function formSubmit(Request $request)
+    public function submit(Request $request) 
     {
-    	return response()->json([$request->all()]);
+        $this->validate($request, [
+            'name' => 'required|string',
+            'email' => 'required|email',
+            'message' => 'required',
+        ]);
+        /*
+          Add mail functionality here.
+        */
+        return response()->json(null, 200);
     }
 }
