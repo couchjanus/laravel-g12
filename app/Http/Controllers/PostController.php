@@ -52,4 +52,17 @@ class PostController extends Controller
                     ->paginate(5);
         return view('blog.index')->with(compact('posts'))->withTitle('Awesome Blog');
     }
+
+    public function showFromCache($slug)
+    {
+        $expiresAt = \Carbon\Carbon::now()->addMinutes(10);
+           
+        $post = \Cache::remember($slug, $expiresAt, function () use ($slug) {
+            return Post::whereSlug($slug)->firstOrFail();
+        });
+
+        $post->update(['visited'=>$post->visited+1]);
+
+        return view('blog.show', ['post' => $post, 'hescomment'=>false]);
+    }
 }

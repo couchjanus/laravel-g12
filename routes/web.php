@@ -1,4 +1,7 @@
 <?php
+use Illuminate\Support\Facades\Input;
+use App\User;
+use Illuminate\Support\Facades\Redis;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,10 +20,6 @@ Route::get('/', function () {
 
 Route::get('about', 'AboutController')->name('about');
 Route::get('contact-us', 'ContactController@index')->name('contact');
-
-// Route::get('test', 'GadgetTestController@index');
-// Route::post('formSubmit','TestController@formSubmit');
-
 Route::post('/submit', 'TestController@submit');
 
 // Blog
@@ -71,6 +70,15 @@ Route::middleware('web')->group(function () {
         ->name('send.invite');
         Route::get('feedbacks', 'Admin\FeedbackController@index')->name('feedbacks.index');
         Route::get('feedbacks/delete/{id}', 'Admin\FeedbackController@destroy');
+        Route::any('users/search',function(){
+            $q = Input::get ( 'q' );
+            $users = User::where('name','LIKE','%'.$q.'%')->orWhere('email','LIKE','%'.$q.'%')->paginate();
+            if(count($users) > 0) {
+                return view('admin.users.index')->withUsers($users)->withQuery($q);
+            } else {
+                  return redirect(route('users.index'))->withType('warning')->withMessage('No Details found. Try to search again !');
+            }
+          });
         
     });
 });
@@ -125,16 +133,122 @@ Route::get('social/{provider}/callback', 'Auth\SocialController@callback')->name
 Route::get('/feedback', 'FeedbackController@create');
 Route::post('/feedback/create', 'FeedbackController@store');
 
-Route::get('vue', function () {
-    return view('vue');
+Route::get('articles', 'ArticleController@index')->name('articles.index');
+Route::get('articles/{id}','ArticleController@show')->name('articles.show'); 
+
+
+use \App\Repositories\ElasticsearchArticleRepositoryInterface;
+
+Route::get('/search', function (ElasticsearchArticleRepositoryInterface $repository) {
+   
+   $articles = $repository->search((string) request('q'));
+
+//    dump($articles);
+   return view('articles.index', [
+       'posts' => $articles,
+       'title' => 'Awesome Blog'
+   ]);
 });
 
-// Route::post(
-//     'post/{id}/comment',
-//     function ($id, Request $request) {
-//         $user = \Auth::user();
-//         // dump($request);
-//         \App\Post::findOrFail($id)->comment($request->all(), $user);
-//         return response()->json([$request->all()]);
-//     }
-// );
+Route::get('/test-cache', function () {
+    // if (Cache::has('key')) {
+    //     $item = \Cache::get('key');
+    //     dump($item);
+    // } else {
+    //     echo "Not Key yet...";
+    // }
+
+    // $value = Cache::get('key', function () {
+    //     return \DB::table('posts')->get();
+    // });
+
+    $minutes = 1;
+
+    // Cache::put('posts', \DB::table('posts')->get(), $minutes);
+
+    $expiresAt = \Carbon\Carbon::now()->addMinutes(1);
+    // Cache::put('posts', \DB::table('posts')->get(), $expiresAt);
+    
+    // Cache::add('posts', \DB::table('posts')->get(), $expiresAt);
+    // Cache::forever('posts', \DB::table('posts')->get());
+
+    // $value = Cache::pull('posts');
+
+    // Cache::forget('posts');
+
+    // Cache::flush();
+    
+    // $value = cache('posts');
+    // cache(['posts' => \DB::table('posts')->get()], $minutes);
+
+       
+    // $value = Cache::remember('posts', $minutes, function () {
+    //     return \DB::table('posts')->get();
+    // });
+
+    // $value = Cache::rememberForever('posts', function() {
+    //     return \DB::table('posts')->get();
+    // });
+    
+    dump($value);
+
+});
+
+  
+ 
+Route::get('/test-redis', function () {
+
+    return Cache::remember('posts.all', 60 * 60 * 24, function () {
+        return \App\Post::all();
+    });
+    // redis has posts.all key exists 
+    // posts found then it will return all post without touching the database
+    // if ($posts = Redis::get('posts.all')) {
+    //     return json_decode($posts);
+    // }
+
+    if ($posts = Redis::command('get',['posts.all'])) {
+        return json_decode($posts);
+    }
+     
+    // get all post
+    $posts = \App\Post::all();
+ 
+    // store into redis
+    Redis::set('posts.all', $posts);
+ 
+    // return all posts
+    // dump($posts);
+    // return $posts;
+    
+    
+    // store data into redis for next 24 hours
+    Redis::setex('posts.all', 60 * 60 * 24, $posts);
+
+    // return all posts
+    return $posts;
+});
+
+
+Route::get('redis-login', function() {
+  return view('redis.login');
+});
+
+Route::post('redis-login', function(Request $request) {
+  $redis = Redis::connection();
+  $redis->hset('user', 'email', $request->get('email'));
+  $redis->hset('user', 'name', $request->get('name'));
+  return redirect(route('r-view'));
+})->name('r-login');
+
+Route::get('redis-view', function() {
+  $redis = Redis::connection();
+  $name = $redis->hget('user', 'name');
+  $email = $redis->hget('user', 'email');
+  echo 'Hello ' . $name . '. Your email is ' . $email;
+  dump($redis->hgetall('user'));
+})->name('r-view');
+
+
+// Route::get('blog/{post}','PostController@showFromCache')->name('blog.show'); 
+

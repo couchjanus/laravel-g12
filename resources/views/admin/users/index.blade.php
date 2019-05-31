@@ -11,6 +11,10 @@
           <a href="{{ route('users.trashed') }}" title="Trashed Users"><button class="btn btn-sm btn-outline-secondary"><span data-feather="trash"></span> Trashed List</button>
           </a>
         </div>
+        <form class="form-inline mr-2" action="/admin/users/search" method="POST" role="search">@csrf
+          <input class="form-control mr-2" type="text" placeholder="Search users" aria-label="Search" name="q">
+          <button class="btn btn-sm btn-outline-success mr-2" type="submit"><span data-feather="search"></span> Search</button>
+        </form>
       </div>
   </div>
     
@@ -23,6 +27,7 @@
       <thead>
         <tr>
           <th>Id</th>
+          <th>Online</th>
           <th>Username</th>
           <th>Email</th>
           <th>Action</th>
@@ -33,6 +38,12 @@
           @foreach($users as $user)
           <tr>
               <td>{{ $user->id }}</td>
+              <td>
+                @if($user->isOnline())<span style="color:green">Online</span>
+                @else<span style="color:red">Offline</span>
+                @endif
+              </td>
+
               <td>{{ $user->name }}</td>
               <td>{{ $user->email }}</td>
               <td>
